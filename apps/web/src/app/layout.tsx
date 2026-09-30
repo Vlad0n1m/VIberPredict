@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { BottomNav, Header } from "@/components/chrome";
+import { ServerCrash } from "@/components/server-crash";
 import { WalletProviders } from "@/components/wallet";
 import "./globals.css";
 
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <div className="flex flex-1 flex-col pb-24 md:pb-12">{children}</div>
           <BottomNav />
         </WalletProviders>
+        <ServerCrash />
       </body>
     </html>
   );
