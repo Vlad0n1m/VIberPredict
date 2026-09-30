@@ -50,7 +50,7 @@ export default async function MarketPage({ params }: PageProps<"/market/[id]">) 
             </div>
           </div>
           <div className="flex h-3.5 overflow-hidden rounded-full bg-no">
-            <div className="border-r-[3px] border-card bg-yes" style={{ width: `${c}%` }} />
+            <div className="anim-grow border-r-[3px] border-card bg-yes" style={{ width: `${c}%` }} />
           </div>
           <div className="flex justify-between font-mono text-[13px]">
             <span className="text-[#1a45d6]">Yes · {sol(m.yesPool)} SOL</span>

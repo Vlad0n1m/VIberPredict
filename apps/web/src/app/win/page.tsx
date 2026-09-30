@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShareCard } from "@/components/share-card";
 import { getMarket, positions, wallet } from "@/lib/markets";
 
 export default function WinPage() {
   const [note, setNote] = useState("");
+  const [shown, setShown] = useState(0);
   const pos = positions.find((p) => p.claimable)!;
   const m = getMarket(pos.marketId)!;
   const payout = pos.claimable!;
@@ -14,6 +15,19 @@ export default function WinPage() {
   const pnl = Math.round((profit / pos.stake) * 100);
   const odds = payout / pos.stake;
   const calledAt = Math.round((0.98 / odds) * 100);
+
+  // Count the win up once on arrival.
+  useEffect(() => {
+    const t0 = performance.now();
+    let raf = 0;
+    const step = (t: number) => {
+      const k = Math.min(1, (t - t0) / 900);
+      setShown(profit * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [profit]);
 
   const url = typeof window !== "undefined" ? `${window.location.origin}/market/${m.id}` : "";
   const text = `I called it on Viber Predict: +${profit.toFixed(2)} SOL (+${pnl}%) on "${m.question}"`;
@@ -42,20 +56,20 @@ export default function WinPage() {
 
   return (
     <main className="relative -mb-24 flex flex-1 flex-col overflow-hidden bg-ink pb-24 text-white md:mb-0 md:pb-12">
-      <svg width="390" height="300" viewBox="0 0 390 300" className="pointer-events-none absolute left-0 top-0" aria-hidden>
-        <rect x="40" y="60" width="10" height="20" rx="2" fill="#D7FF3D" transform="rotate(24 45 70)" />
-        <rect x="320" y="40" width="10" height="20" rx="2" fill="#FF5A1F" transform="rotate(-30 325 50)" />
-        <rect x="350" y="180" width="10" height="20" rx="2" fill="#2459FF" transform="rotate(40 355 190)" />
-        <rect x="24" y="210" width="10" height="20" rx="2" fill="#2459FF" transform="rotate(-18 29 220)" />
-        <rect x="250" y="20" width="8" height="16" rx="2" fill="#D7FF3D" transform="rotate(60 254 28)" />
-        <circle cx="300" cy="120" r="5" fill="#D7FF3D" />
-        <circle cx="80" cy="140" r="4" fill="#FF5A1F" />
-      </svg>
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[320px] overflow-hidden" aria-hidden>
+        {CONFETTI.map((c, i) => (
+          <span
+            key={i}
+            className="anim-confetti absolute top-0 block rounded-[2px]"
+            style={{ left: `${c.x}%`, width: c.w, height: c.w * 2, background: c.color, animationDelay: `${c.d}ms` }}
+          />
+        ))}
+      </div>
       <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 pt-8 md:flex-row md:items-center md:gap-12 md:pt-16">
         <div className="flex flex-col gap-2.5 md:w-[380px] md:shrink-0">
           <span className="text-sm text-[#a9a69e]">Claimed to {wallet.short}</span>
           <h1 className="font-display text-[46px] font-extrabold leading-[0.95] tracking-tighter md:text-6xl">You called it.</h1>
-          <span className="font-display text-[64px] font-extrabold leading-none tracking-tighter text-lime">+{profit.toFixed(2)} SOL</span>
+          <span className="font-display text-[64px] font-extrabold leading-none tracking-tighter text-lime tabular-nums">+{shown.toFixed(2)} SOL</span>
           <span className="font-mono text-sm text-lime">
             +{pnl}% · you were in the {calledAt}%
           </span>
@@ -106,3 +120,16 @@ function Actions({ onShare, onCopy }: { onShare: () => void; onCopy: () => void 
     </>
   );
 }
+
+const CONFETTI = [
+  { x: 6, w: 8, color: "#D7FF3D", d: 0 },
+  { x: 14, w: 6, color: "#FF5A1F", d: 180 },
+  { x: 23, w: 8, color: "#2459FF", d: 90 },
+  { x: 34, w: 5, color: "#D7FF3D", d: 320 },
+  { x: 46, w: 7, color: "#FF5A1F", d: 40 },
+  { x: 57, w: 6, color: "#2459FF", d: 260 },
+  { x: 66, w: 8, color: "#D7FF3D", d: 140 },
+  { x: 75, w: 5, color: "#FF5A1F", d: 380 },
+  { x: 84, w: 7, color: "#2459FF", d: 60 },
+  { x: 93, w: 6, color: "#D7FF3D", d: 220 },
+];

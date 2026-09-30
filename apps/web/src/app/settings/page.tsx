@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { wallet } from "@/lib/markets";
 
@@ -37,7 +38,7 @@ export default function SettingsPage() {
       <div className="flex flex-col gap-2 rounded-[26px] bg-card p-5">
         <span className="text-[13px] font-semibold">Network</span>
         <div className="flex items-center gap-2 text-[15px] font-semibold">
-          <span className="h-2 w-2 rounded-full bg-devnet" />
+          <span className="live-dot h-2 w-2 bg-devnet" />
           Solana Devnet
         </div>
         <span className="text-xs leading-relaxed text-muted">This build runs on devnet only. All SOL here is free test SOL.</span>
@@ -52,6 +53,11 @@ export default function SettingsPage() {
           Airdrop
         </button>
       </div>
+
+      <Link href="/admin" className="flex items-center justify-between rounded-[26px] bg-card px-5 py-4 text-[15px] font-semibold">
+        Admin panel
+        <span className="text-xs font-normal text-muted">admin wallet only →</span>
+      </Link>
 
       {note && <p className="text-center text-sm text-muted">{note}</p>}
       <p className="mt-6 px-1 font-mono text-[11px] text-muted">program 2fQQ…LM3 · devnet · v0.1</p>

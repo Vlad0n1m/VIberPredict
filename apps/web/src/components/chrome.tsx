@@ -4,13 +4,27 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { wallet } from "@/lib/markets";
 
+export function Mark({ size = 28 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden className="group-hover:rotate-[20deg] transition-transform duration-300">
+      <defs>
+        <clipPath id="mark-clip">
+          <circle cx="32" cy="32" r="30" />
+        </clipPath>
+      </defs>
+      <g clipPath="url(#mark-clip)">
+        <rect x="-20" y="-20" width="52" height="104" fill="#2459FF" transform="rotate(20 32 32)" />
+        <rect x="32" y="-20" width="52" height="104" fill="#FF5A1F" transform="rotate(20 32 32)" />
+      </g>
+      <circle cx="32" cy="32" r="10" fill="#D7FF3D" stroke="#15161A" strokeWidth="4" />
+    </svg>
+  );
+}
+
 export function Logo({ size = 28 }: { size?: number }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-extrabold tracking-tight sm:text-2xl">
-      <span className="flex overflow-hidden rounded-full" style={{ width: size, height: size }}>
-        <span className="w-1/2 bg-yes" />
-        <span className="w-1/2 bg-no" />
-      </span>
+    <Link href="/" className="group flex items-center gap-2.5 font-display text-xl font-extrabold tracking-tight sm:text-2xl">
+      <Mark size={size} />
       viber predict
     </Link>
   );
@@ -48,7 +62,7 @@ export function Header() {
         </div>
         <div className="flex items-center gap-2">
           <span className="hidden items-center gap-2 rounded-full bg-devnet px-3.5 py-2 text-sm font-semibold sm:flex">
-            <span className="h-2 w-2 rounded-full bg-ink" />
+            <span className="live-dot h-2 w-2 bg-ink" />
             Devnet
           </span>
           <Link href="/create" className="hidden rounded-full bg-lime px-4 py-2 text-sm font-semibold md:block">

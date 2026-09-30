@@ -6,12 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sdk": "pnpm -C ../../packages/sdk pack --pack-destination ../../apps/web/vendor && pnpm install --force"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@solana/web3.js": "^1.99.0",
+    "@viber/sdk": "file:vendor/viber-sdk-0.1.0.tgz",
     "next": "16.3.7",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
