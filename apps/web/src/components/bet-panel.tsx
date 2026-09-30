@@ -1,12 +1,16 @@
 "use client";
 
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useState } from "react";
+import { useWalletModal } from "./wallet";
 import { MAX_BET, multiplier, payoutFor, type Market, type Side } from "@/lib/markets";
 
 export function BetPanel({ m }: { m: Market }) {
   const [side, setSide] = useState<Side>("yes");
   const [amount, setAmount] = useState("0.50");
   const [sent, setSent] = useState(false);
+  const { publicKey } = useWallet();
+  const { open: openWallet } = useWalletModal();
 
   const stake = Math.min(Math.max(Number.parseFloat(amount) || 0, 0), MAX_BET);
   const payout = payoutFor(m, side, stake);
@@ -81,10 +85,10 @@ export function BetPanel({ m }: { m: Market }) {
       <button
         type="button"
         disabled={!open || stake <= 0}
-        onClick={() => setSent(true)}
+        onClick={() => (publicKey ? setSent(true) : openWallet())}
         className="h-[60px] rounded-full bg-lime text-[17px] font-semibold transition-transform duration-150 active:scale-[0.98] disabled:opacity-40"
       >
-        {!open ? "Betting closed" : sent ? "Approve in your wallet…" : `Bet ${stake.toFixed(2)} SOL on ${side === "yes" ? "Yes" : "No"}`}
+        {!open ? "Betting closed" : !publicKey ? "Connect wallet to bet" : sent ? "Approve in your wallet…" : `Bet ${stake.toFixed(2)} SOL on ${side === "yes" ? "Yes" : "No"}`}
       </button>
       <p className="text-center text-xs text-muted">Payout moves as others bet · max {MAX_BET} SOL per bet</p>
     </aside>

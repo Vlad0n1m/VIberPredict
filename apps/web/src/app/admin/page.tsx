@@ -1,8 +1,9 @@
 "use client";
 
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { backend, type ProgramConfig, type Stats, type TxResult } from "@/lib/backend";
-import { chance, sol, total, wallet, type Market, type MarketStatus, type Side } from "@/lib/markets";
+import { chance, sol, total, type Market, type MarketStatus, type Side } from "@/lib/markets";
 
 type Row = Market & { outcome?: Side | "void" };
 type Filter = "all" | MarketStatus;
@@ -22,6 +23,8 @@ export default function AdminPage() {
   const [query, setQuery] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const { publicKey } = useWallet();
+  const me = publicKey?.toBase58();
 
   const load = useCallback(async () => {
     const [m, c, s] = await Promise.all([backend.getMarkets(), backend.getConfig(), backend.getStats()]);
@@ -57,7 +60,7 @@ export default function AdminPage() {
     [rows, filter, query],
   );
   const queue = rows.filter((m) => m.status === "awaiting");
-  const isAdmin = config ? wallet.short.startsWith(config.admin.slice(0, 4)) : false;
+  const isAdmin = !!config && me === config.admin;
   const dirty = !!config && !!draft && JSON.stringify(config) !== JSON.stringify(draft);
 
   return (
@@ -77,7 +80,7 @@ export default function AdminPage() {
             {config?.paused ? "Program paused" : "Program live"}
           </span>
           <span className={`flex items-center gap-2 rounded-full px-3.5 py-2 ${isAdmin ? "bg-ink text-white" : "bg-no-soft text-[#b83a0b]"}`}>
-            {isAdmin ? `Signed in as admin · ${wallet.short}` : "Connect the admin wallet"}
+            {isAdmin ? `Signed in as admin · ${me!.slice(0, 4)}…${me!.slice(-4)}` : "Connect the admin wallet"}
           </span>
         </div>
       </div>

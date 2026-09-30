@@ -1,6 +1,8 @@
 "use client";
 
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useState } from "react";
+import { useWalletModal } from "@/components/wallet";
 
 const durations = ["1h", "3h", "1d", "7d"];
 
@@ -9,6 +11,8 @@ export default function CreatePage() {
   const [dur, setDur] = useState("3h");
   const [src, setSrc] = useState("");
   const [sent, setSent] = useState(false);
+  const { publicKey } = useWallet();
+  const { open: openWallet } = useWalletModal();
 
   return (
     <main className="mx-auto flex w-full max-w-xl flex-col gap-4 px-4 pt-4 sm:pt-8">
@@ -77,10 +81,10 @@ export default function CreatePage() {
       <button
         type="button"
         disabled={q.trim().length < 10}
-        onClick={() => setSent(true)}
+        onClick={() => (publicKey ? setSent(true) : openWallet())}
         className="mt-2 h-[60px] rounded-full bg-lime text-[17px] font-semibold transition-transform duration-150 active:scale-[0.98] disabled:opacity-40"
       >
-        {sent ? "Approve in your wallet…" : "Launch market"}
+        {!publicKey ? "Connect wallet to launch" : sent ? "Approve in your wallet…" : "Launch market"}
       </button>
       <p className="text-center text-xs text-muted">Devnet · you resolve it after it closes</p>
     </main>

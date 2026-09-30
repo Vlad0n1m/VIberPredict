@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { wallet } from "@/lib/markets";
+import { WalletButton } from "./wallet";
 
 export function Mark({ size = 28 }: { size?: number }) {
   return (
@@ -68,10 +68,7 @@ export function Header() {
           <Link href="/create" className="hidden rounded-full bg-lime px-4 py-2 text-sm font-semibold md:block">
             + Create
           </Link>
-          <Link href="/settings" className="rounded-full bg-ink px-3.5 py-2 font-mono text-xs text-white sm:px-4 sm:text-sm">
-            <span className="hidden sm:inline">{wallet.short} · </span>
-            {wallet.balance.toFixed(2)} SOL
-          </Link>
+          <WalletButton />
         </div>
       </div>
     </header>

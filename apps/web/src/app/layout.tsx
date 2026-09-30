@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { BottomNav, Header } from "@/components/chrome";
+import { WalletProviders } from "@/components/wallet";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,9 +36,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <Header />
-        <div className="flex flex-1 flex-col pb-24 md:pb-12">{children}</div>
-        <BottomNav />
+        <WalletProviders>
+          <Header />
+          <div className="flex flex-1 flex-col pb-24 md:pb-12">{children}</div>
+          <BottomNav />
+        </WalletProviders>
       </body>
     </html>
   );
