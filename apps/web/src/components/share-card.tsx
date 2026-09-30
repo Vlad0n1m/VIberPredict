@@ -12,7 +12,7 @@ type Props = {
 /** 4:3 P&L card, scales with its container width. */
 export function ShareCard(p: Props) {
   return (
-    <div className="@container relative aspect-[4/3] w-full overflow-hidden rounded-[22px] bg-ink text-white">
+    <div className="@container relative aspect-[4/3] w-full overflow-hidden rounded-[22px] bg-ink text-white ring-1 ring-[#2a2b30]">
       <svg viewBox="0 0 760 900" className="absolute right-0 top-0 h-full w-[63%]" preserveAspectRatio="xMidYMid slice" aria-hidden>
         <circle cx="470" cy="420" r="330" fill="#1E2026" />
         <circle cx="470" cy="420" r="230" fill="#23252C" />
